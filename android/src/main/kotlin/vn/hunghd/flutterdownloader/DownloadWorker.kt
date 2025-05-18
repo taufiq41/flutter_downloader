@@ -708,7 +708,11 @@ class DownloadWorker(context: Context, params: WorkerParameters) :
                 }
             }
             log("Update notification: {notificationId: $primaryId, title: $title, status: $status, progress: $progress}")
-            NotificationManagerCompat.from(context).notify(primaryId, builder.build())
+            try {
+                NotificationManagerCompat.from(context).notify(primaryId, builder.build())
+            } catch (e: SecurityException) {
+                Log.e("DownloadWorker", "Notification permission not granted", e)
+            }
             lastCallUpdateNotification = System.currentTimeMillis()
         }
     }
